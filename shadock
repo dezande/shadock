@@ -1,10 +1,37 @@
 #!/bin/bash
 # Shadock move your podcast mp3 from iTunes in your périphéric
 
-if $1 == walkman then
-  rm /Volumes/WALKMAN/MUSIC/podcast_shadock/*
-  find $HOME/Music/iTunes/"iTunes Media"/Podcasts/ -name "*.mp3" -exec cp '{}' /Volumes/WALKMAN/MUSIC/podcast_shadock/ \;
-else if $1 == test then
-    rm $HOME/test/*
-    find $HOME/Music/iTunes/"iTunes Media"/Podcasts/ -name "*.mp3" -exec cp '{}' $HOME/test/ \;
-fi
+# function
+shadock_rm () {
+	rm $shadock_dir/*
+}
+
+shadock_cp () {
+	find $HOME/Music/iTunes/"iTunes Media"/Podcasts/ -name "*.mp3" -exec cp '{}' $shadock_dir/ \;
+}
+
+# init $shadock_dir
+case $1 in
+	"test")
+		echo "Ceci est un test"
+		shadock_dir=$HOME/test
+		;;
+	"walkman")
+		echo "Walkam start"
+		shadock_dir=/Volumes/WALKMAN/MUSIC/podcast_shadock
+		;;
+esac
+
+# action
+case $2 in
+	"rm")
+		shadock_rm
+		;;
+	"cp")
+		shadock_cp
+		;;
+	*)
+		shadock_rm
+		shadock_cp
+		;;
+esac
