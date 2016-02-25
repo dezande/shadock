@@ -3,11 +3,24 @@
 
 # function
 shadock_rm () {
-	rm $shadock_dir/*
+	rm -r $shadock_dir/*
 }
 
 shadock_cp () {
-	find $HOME/Music/iTunes/"iTunes Media"/Podcasts/ -name "*.mp3" -exec cp '{}' $shadock_dir/ \;
+	SAVEIFS=$IFS
+	IFS=$(echo -en "\n\b")
+	FILES=$HOME/Music/iTunes/"iTunes Media"/Podcasts/*
+	for f in $FILES
+	do
+		count=$(find $f -type f -name '*.mp3' | wc -l)
+
+		if [ $count -gt 0 ]; then
+		 	basename $f
+			cp -r $f $shadock_dir/$f_last
+		fi
+	done
+	# restore $IFS
+	IFS=$SAVEIFS
 }
 
 # init $shadock_dir
